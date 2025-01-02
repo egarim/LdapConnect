@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.DirectoryServices.Protocols;
 using System.Net;
 
@@ -46,8 +47,8 @@ namespace LdapConnect
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                Console.WriteLine($"Stack: {ex.StackTrace}");
+                Debug.WriteLine($"Error: {ex.Message}");
+                Debug.WriteLine($"Stack: {ex.StackTrace}");
             }
             Assert.Pass();
         }
@@ -74,9 +75,9 @@ namespace LdapConnect
 
                 foreach (SearchResultEntry entry in response.Entries)
                 {
-                    Console.WriteLine($"User: {entry.Attributes["uid"][0]}");
-                    Console.WriteLine($"Name: {entry.Attributes["cn"][0]}");
-                    Console.WriteLine("-------------------");
+                    Debug.WriteLine($"User: {entry.Attributes["uid"][0]}");
+                    Debug.WriteLine($"Name: {entry.Attributes["cn"][0]}");
+                    Debug.WriteLine("-------------------");
                 }
             }
         }
