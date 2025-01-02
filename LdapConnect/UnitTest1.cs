@@ -14,7 +14,7 @@ namespace LdapConnect
         public void Test1()
         {
 
-            var ldapIdentifier = new LdapDirectoryIdentifier("localhost", 389);
+            var ldapIdentifier = new LdapDirectoryIdentifier("172.105.135.186", 389);
             var userDn = "uid=test1,ou=users,dc=example,dc=com";
             var password = "1234567890";
 
@@ -50,6 +50,35 @@ namespace LdapConnect
                 Console.WriteLine($"Stack: {ex.StackTrace}");
             }
             Assert.Pass();
+        }
+
+        [Test]
+        public void ListUserTest()
+        {
+            var ldapIdentifier = new LdapDirectoryIdentifier("localhost", 389);
+
+            using (var connection = new LdapConnection(ldapIdentifier))
+            {
+                connection.SessionOptions.ProtocolVersion = 3;
+                connection.AuthType = AuthType.Anonymous;
+                connection.Bind(); // Anonymous bind
+
+                var request = new SearchRequest(
+                    "dc=example,dc=com",
+                    "(objectClass=inetOrgPerson)",
+                    SearchScope.Subtree,
+                    "uid", "cn"
+                );
+
+                var response = (SearchResponse)connection.SendRequest(request);
+
+                foreach (SearchResultEntry entry in response.Entries)
+                {
+                    Console.WriteLine($"User: {entry.Attributes["uid"][0]}");
+                    Console.WriteLine($"Name: {entry.Attributes["cn"][0]}");
+                    Console.WriteLine("-------------------");
+                }
+            }
         }
     }
 }
